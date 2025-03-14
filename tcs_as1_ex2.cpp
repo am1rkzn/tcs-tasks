@@ -1,50 +1,26 @@
 //Amir Valeev CSE-06
+// we are asked to implement fst, but i don't know how to fix overlapping
+// without additional memory
 #include <iostream>
 #include <vector>
 #include <string>
 
 using namespace std;
 
-class lastname_firstname_FST {
+class valeev_amir_FST {
 private:
     string substring; // Substring for analyzing
     int state;
     int count;       // Our result
-    vector<int> overlap; // array which helps to deal with overlapping
-
-    // filling array with lengths of ovelapping substrings
-    void Overlap() {
-        int len = 0;
-        overlap[0] = 0;
-        int i = 1;
-
-        while (i < substring.length()) {
-            if (substring[i] == substring[len]) {
-                len++;
-                overlap[i] = len;
-                i++;
-            } else {
-                if (len != 0) {
-                    len = overlap[len - 1];
-                } else {
-                    overlap[i] = 0;
-                    i++;
-                }
-            }
-        }
-    }
 
 public:
     // Constructor
-    lastname_firstname_FST(string sub) : substring(sub), state(0), count(0) {
-        overlap.resize(substring.length(), 0);
-        Overlap();
-    }
+    valeev_amir_FST(string sub) : substring(sub), state(0), count(0) {}
 
     void process(char ch) {
         // if we have 1 matching char and next is not matching
         while (state > 0 && ch != substring[state]) {
-            state = overlap[state - 1];
+            state = 0;
         }
 
         // if elements are equal, increase state
@@ -55,7 +31,7 @@ public:
         // if we have found string
         if (state == substring.length()) {
             count++;
-            state = overlap[state - 1]; // fixing overlapping problem
+            state = 0;
         }
     }
 
@@ -70,7 +46,7 @@ int main() {
     cin >> C >> S;
 
     // creating fst
-    lastname_firstname_FST fst(C);
+    valeev_amir_FST fst(C);
 
     // Checking every symbol
     for (char ch : S) {
